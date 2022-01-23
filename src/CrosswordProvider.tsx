@@ -182,7 +182,7 @@ export type CrosswordProviderProps = EnhancedProps<
       direction: Direction,
       row: number,
       col: number,
-      info: ClueTypeOriginal | undefined
+      number: string, //ClueTypeOriginal | undefined
     ) => void;
   }
 >;
@@ -424,9 +424,12 @@ const CrosswordProvider = React.forwardRef<
 
     // Any time focused row, col direction or number changes run callback
     useEffect(() => {
+      const cellData = getCellData(focusedRow, focusedRow);
       let info = undefined;
-      if (clues) info = clues[currentDirection][Number(currentNumber)];
-      if (onMoved) onMoved(currentDirection, focusedRow, focusedCol, info);
+      if (cellData.used && cellData[currentDirection] && clues) {
+        info = clues[currentDirection][Number(cellData[currentDirection])];
+      }
+      if (onMoved) onMoved(currentDirection, focusedRow, focusedCol, currentNumber);
     }, [focusedCol, focusedRow, currentDirection, currentNumber]);
 
     // Any time the checkQueue changes, call checkCorrectness!
