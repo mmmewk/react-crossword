@@ -1,11 +1,10 @@
 {
-  "name": "@jaredreisinger/react-crossword",
-  "homepage": "https://react-crossword.jaredreisinger.com",
-  "version": "4.1.1",
+  "name": "react-crossword-v2",
+  "version": "4.1.2",
   "description": "A flexible, responsive, and easy-to-use crossword component for React apps",
   "author": {
-    "name": "JaredReisinger",
-    "email": "jaredreisinger@hotmail.com"
+    "name": "MatthewKoppe",
+    "email": "mmmewk@gmail.com"
   },
   "keywords": [
     "react",
@@ -16,7 +15,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/JaredReisinger/react-crossword"
+    "url": "https://github.com/mmmewk/react-crossword"
   },
   "license": "MIT",
   "engines": {
@@ -25,22 +24,8 @@
   "main": "dist/index.js",
   "sideEffects": false,
   "scripts": {
-    "test": "jest",
-    "test:coverage": "jest --coverage --collectCoverageFrom='src/**/*.{js,jsx,ts,tsx}'",
-    "test:dev": "jest --watch",
-    "lint": "eslint src/**/*.{js,jsx,ts,tsx}",
-    "stylelint": "stylelint src/**/*.{js,jsx,ts,tsx,css,scss,less}",
-    "commit": "git-cz",
-    "#release": "npm run dist && semantic-release",
     "build": "tsc",
-    "dist": "npm run clean && npm run build",
-    "clean": "rimraf build coverage dist styleguide",
-    "doc:dev": "styleguidist server",
-    "doc:build": "styleguidist build",
-    "doc:deploy": "npm run doc:build && gh-pages --dist styleguide --branch documentation",
-    "#snyk-protect": "snyk protect",
-    "#prepare": "npm run snyk-protect",
-    "prepare": "is-ci || husky install"
+    "dist": "npm run clean && npm run build"
   },
   "files": [
     "/dist",
@@ -48,20 +33,6 @@
     "!**/__test__",
     "!**/*.test.js"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
-  "config": {
-    "commitizen": {
-      "path": "cz-conventional-changelog"
-    }
-  },
-  "lint-staged": {
-    "{src,docs}/**/*.{js,json,css,jsx,ts,tsx}": [
-      "stylelint",
-      "eslint --fix --quiet --ignore-path .gitignore"
-    ]
-  },
   "dependencies": {
     "immer": "^9.0.7",
     "prop-types": "^15.8.0",
@@ -126,6 +97,5 @@
     "react": ">=17.0.2",
     "react-dom": ">=17.0.2",
     "styled-components": ">=5.3.3"
-  },
-  "snyk": true
+  }
 }

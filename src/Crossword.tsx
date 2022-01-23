@@ -110,6 +110,14 @@ const Crossword = React.forwardRef<CrosswordImperative, CrosswordProps>(
          */
         setGuess: (row: number, col: number, guess: string) =>
           providerRef.current?.setGuess(row, col, guess),
+
+        /**
+         * Get current guess.
+         *
+         * @since 4.1.0
+         */
+        getCurrentGuess: (row: number, col: number) =>
+          providerRef.current?.getCurrentGuess(row, col),
       }),
       []
     );

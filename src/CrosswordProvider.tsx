@@ -28,6 +28,7 @@ import {
   UsedCellData,
   CellData,
   UnusedCellData,
+  ClueTypeOriginal,
 } from './types';
 import {
   bothDirections,
@@ -120,6 +121,12 @@ export const crosswordProviderPropTypes = {
    */
   onClueSelected: PropTypes.func,
 
+  /**
+   * callback funciton called when ui is moved
+   */
+  onMoved: PropTypes.func,
+
+
   children: PropTypes.node,
 };
 
@@ -166,6 +173,17 @@ export type CrosswordProviderProps = EnhancedProps<
      * callback function called when a clue is selected
      */
     onClueSelected?: (direction: Direction, number: string) => void;
+
+
+    /**
+     * callback funciton called when ui is moved
+     */
+    onMoved?: (
+      direction: Direction,
+      row: number,
+      col: number,
+      info: ClueTypeOriginal | undefined
+    ) => void;
   }
 >;
 
@@ -198,6 +216,12 @@ export interface CrosswordProviderImperative {
    * @since 4.1.0
    */
   setGuess: (row: number, col: number, guess: string) => void;
+
+
+  /**
+   * Gets current guess for a row and column
+   */
+  getCurrentGuess: (row: number, col: number) => string | undefined;
 }
 
 /**
@@ -221,6 +245,7 @@ const CrosswordProvider = React.forwardRef<
       onCrosswordCorrect,
       onCellChange,
       onClueSelected,
+      onMoved,
       useStorage,
       children,
     },
@@ -250,7 +275,7 @@ const CrosswordProvider = React.forwardRef<
     const [focusedCol, setFocusedCol] = useState(0);
     const [currentDirection, setCurrentDirection] =
       useState<Direction>('across');
-    const [currentNumber, setCurrentNumber] = useState('1');
+    const [currentNumber, setCurrentNumber] = useState<string>('1');
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [bulkChange, setBulkChange] = useState<string | null>(null);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -396,6 +421,13 @@ const CrosswordProvider = React.forwardRef<
       },
       [getCellData]
     );
+
+    // Any time focused row, col direction or number changes run callback
+    useEffect(() => {
+      let info = undefined;
+      if (clues) info = clues[currentDirection][Number(currentNumber)];
+      if (onMoved) onMoved(currentDirection, focusedRow, focusedCol, info);
+    }, [focusedCol, focusedRow, currentDirection, currentNumber]);
 
     // Any time the checkQueue changes, call checkCorrectness!
     useEffect(() => {
@@ -865,6 +897,17 @@ const CrosswordProvider = React.forwardRef<
           // REVIEW: should we force-case this?
           setCellCharacter(row, col, guess.toUpperCase());
         },
+
+
+        /**
+         * Get the cuess for a specific grid location.
+         *
+         */
+         getCurrentGuess: (row: number, col: number) => {
+          const data = getCellData(row, col);
+          if (data.used) return data.guess;
+          return '';
+        },
       }),
       [clues, crosswordCorrect, onLoadedCorrect, useStorage]
     );
@@ -929,5 +972,6 @@ CrosswordProvider.defaultProps = {
   onCrosswordCorrect: undefined,
   onCellChange: undefined,
   onClueSelected: undefined,
+  onMoved: undefined,
   children: undefined,
 };
